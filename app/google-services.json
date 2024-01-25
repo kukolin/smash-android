@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "672437938650",
+    "firebase_url": "https://smash-b17db-default-rtdb.firebaseio.com",
+    "project_id": "smash-b17db",
+    "storage_bucket": "smash-b17db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672437938650:android:9139bc114b06568b3e78e3",
+        "android_client_info": {
+          "package_name": "com.anezin.smash"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWio5z0wfltm3yQHRbsm0D3fXGpf8DYWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
