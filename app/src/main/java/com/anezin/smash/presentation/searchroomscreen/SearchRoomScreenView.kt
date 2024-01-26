@@ -17,12 +17,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.anezin.smash.infrastructure.factories.Factory
 import kotlinx.coroutines.launch
 
 class SearchRoomScreenView {
+
+    @Preview(showSystemUi = true)
+    @Composable
+    fun Preview() {
+        Text("asd")
+    }
 
     @Composable
     fun Build(navController: NavController, viewModel: SearchRoomScreenViewModel = Factory.searchRoomScreenViewModel) {
@@ -41,10 +48,12 @@ class SearchRoomScreenView {
             Spacer(modifier = Modifier.height(8.dp))
             val coroutineScope = rememberCoroutineScope()
             if(foundRoomState.loading) Text(text = "Cargando...")
+            if(foundRoomState.room != null) Text(text = "Cantidad de gente en la sala: ${foundRoomState.room?.players?.count()}")
+            if(foundRoomState.room == null) Text(text = "No se encontró la sala.")
 
             Button(onClick = {
                 coroutineScope.launch {
-                    viewModel.searchRoom(text)
+                    viewModel.searchRoom(text, navController)
                 }
             }) {
                 Text(text = "Go")

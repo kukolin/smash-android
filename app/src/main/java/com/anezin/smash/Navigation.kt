@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.anezin.smash.presentation.mainscreen.MainScreenView
+import com.anezin.smash.presentation.roomscreen.RoomScreenView
 import com.anezin.smash.presentation.searchroomscreen.SearchRoomScreenView
 
 @Composable
@@ -34,6 +35,9 @@ fun Navigation() {
     NavHost(navController = navController, startDestination = Screen.MainScreen.route) {
         composable(route = Screen.MainScreen.route) {
             MainScreenView().Build(navController = navController)
+        }
+        composable(route = Screen.RoomScreen.route) {
+            RoomScreenView().Build(navController = navController)
         }
         composable(route = Screen.SearchRoomScreen.route) {
             SearchRoomScreenView().Build(navController = navController)
@@ -47,38 +51,12 @@ fun Navigation() {
                 }
             )
         ) {entry ->
-            DetailScreen(name = entry.arguments?.getString("name"))
+            DetailScreen(name = entry.arguments?.getString("name"))  //Example
         }
     }
 }
 
-@Composable
-fun MainScreenTest(navController: NavController) {
-    var text by remember {
-        mutableStateOf("")
-    }
-    Column(
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 50.dp)
-    ) {
-        TextField(
-            value = text, onValueChange = {
-                text = it
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = {
-            navController.navigate(Screen.DetailScreen.withArgs(text))
-        }) {
-            Text(text = "To DetailScreen")
-        }
-    }
-}
-
-@Composable
+@Composable //Example
 fun DetailScreen(name: String?) {
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
         Text(text = "Hello, $name")
