@@ -25,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.anezin.smash.presentation.gameroom.GameRoomScreenView
 import com.anezin.smash.presentation.mainscreen.MainScreenView
 import com.anezin.smash.presentation.roomscreen.RoomScreenView
 import com.anezin.smash.presentation.searchroomscreen.SearchRoomScreenView
@@ -41,6 +42,9 @@ fun Navigation() {
         }
         composable(route = Screen.SearchRoomScreen.route) {
             SearchRoomScreenView().Build(navController = navController)
+        }
+        composable(route = Screen.GameRoomScreen.route) {
+            GameRoomScreenView().Build(navController = navController)
         }
         composable(
             route = Screen.DetailScreen.route + "/{name}",

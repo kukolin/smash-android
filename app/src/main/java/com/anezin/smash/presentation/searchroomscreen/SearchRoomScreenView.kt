@@ -44,11 +44,11 @@ class SearchRoomScreenView {
         ) {
             Text(text = "Ingrese el ID de la sala:")
             Spacer(modifier = Modifier.height(8.dp))
+            text = "-NnBI5_cAHOVD4X8JTnQ"
             TextField(value = text, onValueChange = { text = it })
             Spacer(modifier = Modifier.height(8.dp))
             val coroutineScope = rememberCoroutineScope()
             if(foundRoomState.loading) Text(text = "Cargando...")
-            if(foundRoomState.room != null) Text(text = "Cantidad de gente en la sala: ${foundRoomState.room?.players?.count()}")
             if(foundRoomState.room == null) Text(text = "No se encontró la sala.")
 
             Button(onClick = {

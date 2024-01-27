@@ -5,6 +5,7 @@ import com.anezin.smash.infrastructure.actions.GetRoomFromMemory
 import com.anezin.smash.infrastructure.actions.SaveRoomInMemory
 import com.anezin.smash.infrastructure.repositories.FirebaseRoomRepository
 import com.anezin.smash.infrastructure.repositories.InMemoryLocalDataRepository
+import com.anezin.smash.presentation.gameroom.GameRoomScreenViewModel
 import com.anezin.smash.presentation.roomscreen.RoomScreenViewModel
 import com.anezin.smash.presentation.searchroomscreen.SearchRoomScreenViewModel
 
@@ -23,6 +24,8 @@ class Factory {
         val searchRoomScreenViewModel =
             SearchRoomScreenViewModel(getRoomAction, saveRoomInMemory)
 
-        val roomScreenViewModel: RoomScreenViewModel = RoomScreenViewModel(getRoomFromMemory)
+        val roomScreenViewModel = RoomScreenViewModel(getRoomFromMemory)
+
+        val gameRoomScreenViewModel = GameRoomScreenViewModel(getRoomFromMemory)
     }
 }
