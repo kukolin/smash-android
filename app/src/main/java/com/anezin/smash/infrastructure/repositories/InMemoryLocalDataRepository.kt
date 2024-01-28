@@ -11,7 +11,16 @@ class InMemoryLocalDataRepository : LocalDataRepository {
     override fun getLocalRoom(): Room {
         return room
     }
+
+    override fun getMyId(): String {
+        return myId
+    }
+
+    override fun saveMyId(myId: String) {
+        Companion.myId = myId
+    }
     companion object {
         lateinit var room: Room
+        var myId: String = ""
     }
 }
