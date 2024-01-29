@@ -19,14 +19,31 @@ class GameRoomScreenViewModel(
     private val _uiState = MutableStateFlow(GameRoomViewState())
     val uiState: StateFlow<GameRoomViewState> = _uiState.asStateFlow()
 
+    val room = getRoomFromMemory()
     fun initializeViewModel() {
         val opponents = calculateOpponents()
-        _uiState.value = GameRoomViewState().copy(room = getRoomFromMemory(), opponents = opponents)
+        _uiState.value = GameRoomViewState().copy(room = room, opponents = opponents)
     }
 
     private fun calculateOpponents(): List<Player>? {
-        val players = getRoomFromMemory().players
-        return players?.filter { !it.id.equals("id4") }
+        val players = room.players
+        return players?.filter { !it.id.equals(getMyId()) }
+    }
+
+    private fun calculateCurrentTurnId(): String {
+        return room.players?.first { it.id == room.currentTurn}?.id!!
+    }
+
+    private fun calculateNextTurnId(): String {
+        if(room.players == null) return ""
+        val alfOrderPlayers = room.players.sortedBy { it.id }
+        val currentPlayer = alfOrderPlayers.first { it.id == room.currentTurn}
+        val currentPlayerIndex = alfOrderPlayers.indexOf(currentPlayer)
+        var nextPlayerIndex = 0
+        if(alfOrderPlayers.count() != currentPlayerIndex) {
+            nextPlayerIndex = currentPlayerIndex + 1
+        }
+        return alfOrderPlayers[nextPlayerIndex].id!! //TODO
     }
 
     fun drawCard() {
