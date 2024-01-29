@@ -12,7 +12,6 @@ class DummyFirebaseRepository : RoomRepository {
     }
 
     override suspend fun saveRoomData(room: Room) {
-
     }
 
     companion object {

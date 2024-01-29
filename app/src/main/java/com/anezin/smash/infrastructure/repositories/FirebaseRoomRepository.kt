@@ -31,6 +31,7 @@ class FirebaseRoomRepository(
     }
 
     override suspend fun saveRoomData(room: Room) {
-
+        val myRef = database.getReference("rooms/${room.key}")
+        myRef.setValue(room)
     }
 }
