@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.anezin.smash.infrastructure.actions.GetMyIdFromSharedPrefs
 import com.anezin.smash.infrastructure.actions.GetRoom
 import com.anezin.smash.infrastructure.actions.GetRoomFromMemory
 import com.anezin.smash.infrastructure.actions.SaveRoomInMemory
@@ -22,25 +21,18 @@ class Factory {
     companion object {
         private val firebaseRepository = FirebaseRoomRepository()
 //        private val firebaseRepository = DummyFirebaseRepository()
-
         private val localDataRepository = InMemoryLocalDataRepository()
+
         private val getRoomAction = GetRoom(firebaseRepository)
-
         private val saveRoomInMemory = SaveRoomInMemory(localDataRepository)
-
         private val getRoomFromMemory = GetRoomFromMemory(localDataRepository)
 
         val searchRoomScreenViewModel =
             SearchRoomScreenViewModel(getRoomAction, saveRoomInMemory)
-
         val roomScreenViewModel = RoomScreenViewModel(getRoomFromMemory)
-        fun mainScreenViewModel(context: Context) = MainScreenViewModel(localDataRepository, sharedPrefsIdRepository(context))
-        fun sharedPrefsIdRepository(context: Context) =
-            SharedPrefsIdRepository(context.dataStore)
-
-        private fun getMyIdAction(context: Context) =
-            GetMyIdFromSharedPrefs(sharedPrefsIdRepository(context))
-
         val gameRoomScreenViewModel = GameRoomScreenViewModel(getRoomFromMemory, localDataRepository)
+        private fun sharedPrefsIdRepository(context: Context) =
+            SharedPrefsIdRepository(context.dataStore)
+        fun mainScreenViewModel(context: Context) = MainScreenViewModel(localDataRepository, sharedPrefsIdRepository(context))
     }
 }
