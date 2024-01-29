@@ -6,7 +6,7 @@ import com.anezin.smash.core.interfaces.RoomRepository
 import kotlinx.coroutines.delay
 
 class DummyFirebaseRepository : RoomRepository {
-    override suspend fun getRoomData(roomId: String): Room? {
+    override suspend fun getRoomData(roomId: String): Room {
         delay(1000)
         return dummyRoom
     }

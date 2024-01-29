@@ -1,5 +1,6 @@
 package com.anezin.smash.presentation.searchroomscreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.anezin.smash.Screen
@@ -21,8 +22,8 @@ class SearchRoomScreenViewModel(
     suspend fun searchRoom(roomIdText: String, navController: NavController) {
         _uiState.value = SearchState().copy(loading = true)
         val resultRoomData = getRoom(roomIdText)
-        if(resultRoomData != null) {
-            //write in memory roomdata repository
+        if (resultRoomData.key.isNotBlank()) {
+            Log.d("searchRoom", "Creando sala nueva en memoria")
             saveRoomInMemory(resultRoomData)
             navController.navigate(Screen.RoomScreen.route)
         }

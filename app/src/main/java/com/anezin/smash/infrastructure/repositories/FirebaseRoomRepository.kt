@@ -15,14 +15,14 @@ import kotlin.coroutines.resumeWithException
 class FirebaseRoomRepository(
     private val database: FirebaseDatabase = Firebase.database
 ) : RoomRepository {
-    override suspend fun getRoomData(roomId: String): Room? {
+    override suspend fun getRoomData(roomId: String): Room {
         return suspendCancellableCoroutine { continuation ->
 
             val myRef = database.getReference("rooms/$roomId")
 
             myRef.get().addOnSuccessListener { snapshot ->
-                val roomResponse = snapshot.getValue<RoomResponse>()
-                continuation.resume(roomResponse?.toRoom())
+                val roomResponse = snapshot.getValue<RoomResponse>() ?: throw Exception()
+                continuation.resume(roomResponse.toRoom())
             }.addOnFailureListener { exception ->
                 Log.e("firebase", "Error getting data", exception)
                 continuation.resumeWithException(exception)
