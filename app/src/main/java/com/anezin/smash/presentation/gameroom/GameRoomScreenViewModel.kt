@@ -29,5 +29,9 @@ class GameRoomScreenViewModel(
         return players?.filter { !it.id.equals("id4") }
     }
 
+    fun drawCard() {
+
+    }
+
     data class GameRoomViewState(val room: Room? = null, val opponents: List<Player>? = null)
 }
