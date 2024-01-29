@@ -80,6 +80,6 @@ class RoomScreenView {
 
     companion object {
         val dummyPlayers =
-            listOf(Player("id", "name1", 0, listOf()), Player("id", "name2", 0, listOf()))
+            listOf(Player("id", "name1", listOf()), Player("id", "name2", listOf()))
     }
 }

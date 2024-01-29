@@ -11,10 +11,10 @@ class DummyFirebaseRepository : RoomRepository {
         return dummyRoom
     }
     companion object {
-        private val dummyPlayer1 = Player("id1", "name1", 0, listOf())
-        private val dummyPlayer2 = Player("id2", "name2", 0, listOf())
-        private val dummyPlayer3 = Player("id3", "name3", 0, listOf())
+        private val dummyPlayer1 = Player("id1", "name1",  listOf())
+        private val dummyPlayer2 = Player("id2", "name2",  listOf())
+        private val dummyPlayer3 = Player("id3", "name3",  listOf())
         private val dummyPlayers = listOf(dummyPlayer1, dummyPlayer2, dummyPlayer3)
-        private val dummyRoom = Room(listOf(), 0, "-NnBI5_cAHOVD4X8JTnQ", "roomName", dummyPlayers, true)
+        private val dummyRoom = Room(listOf(), "0", "-NnBI5_cAHOVD4X8JTnQ", "roomName", dummyPlayers, true)
     }
 }

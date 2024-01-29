@@ -13,8 +13,8 @@ import com.anezin.smash.presentation.searchroomscreen.SearchRoomScreenViewModel
 
 class Factory {
     companion object {
-//        private val firebaseRepository = FirebaseRoomRepository()
-        private val firebaseRepository = DummyFirebaseRepository()
+        private val firebaseRepository = FirebaseRoomRepository()
+//        private val firebaseRepository = DummyFirebaseRepository()
 
         private val localDataRepository = InMemoryLocalDataRepository()
 

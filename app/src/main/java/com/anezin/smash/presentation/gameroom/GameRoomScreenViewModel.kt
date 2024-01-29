@@ -1,12 +1,10 @@
 package com.anezin.smash.presentation.gameroom
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.anezin.smash.core.domain.Player
 import com.anezin.smash.core.domain.Room
 import com.anezin.smash.infrastructure.actions.GetMyIdFromMemory
 import com.anezin.smash.infrastructure.actions.GetRoomFromMemory
-import com.anezin.smash.presentation.roomscreen.RoomViewState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,23 +17,23 @@ class GameRoomScreenViewModel(
     private val _uiState = MutableStateFlow(GameRoomViewState())
     val uiState: StateFlow<GameRoomViewState> = _uiState.asStateFlow()
 
-    val room = getRoomFromMemory()
+    lateinit var room: Room
     fun initializeViewModel() {
+        room = getRoomFromMemory()
         val opponents = calculateOpponents()
         _uiState.value = GameRoomViewState().copy(room = room, opponents = opponents)
     }
 
     private fun calculateOpponents(): List<Player>? {
         val players = room.players
-        return players?.filter { !it.id.equals(getMyId()) }
+        return players.filter { it.id != getMyId() }
     }
 
     private fun calculateCurrentTurnId(): String {
-        return room.players?.first { it.id == room.currentTurn}?.id!!
+        return room.players.first { it.id == room.currentTurn}.id
     }
 
     private fun calculateNextTurnId(): String {
-        if(room.players == null) return ""
         val alfOrderPlayers = room.players.sortedBy { it.id }
         val currentPlayer = alfOrderPlayers.first { it.id == room.currentTurn}
         val currentPlayerIndex = alfOrderPlayers.indexOf(currentPlayer)
@@ -43,7 +41,7 @@ class GameRoomScreenViewModel(
         if(alfOrderPlayers.count() != currentPlayerIndex) {
             nextPlayerIndex = currentPlayerIndex + 1
         }
-        return alfOrderPlayers[nextPlayerIndex].id!! //TODO
+        return alfOrderPlayers[nextPlayerIndex].id
     }
 
     fun drawCard() {

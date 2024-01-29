@@ -2,6 +2,7 @@ package com.anezin.smash.infrastructure.repositories
 
 import android.util.Log
 import com.anezin.smash.core.domain.Room
+import com.anezin.smash.core.domain.RoomResponse
 import com.anezin.smash.core.interfaces.RoomRepository
 import com.google.firebase.Firebase
 import com.google.firebase.database.FirebaseDatabase
@@ -20,8 +21,8 @@ class FirebaseRoomRepository(
             val myRef = database.getReference("rooms/$roomId")
 
             myRef.get().addOnSuccessListener { snapshot ->
-                val room = snapshot.getValue<Room>()
-                continuation.resume(room)
+                val roomResponse = snapshot.getValue<RoomResponse>()
+                continuation.resume(roomResponse?.toRoom())
             }.addOnFailureListener { exception ->
                 Log.e("firebase", "Error getting data", exception)
                 continuation.resumeWithException(exception)
