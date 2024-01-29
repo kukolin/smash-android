@@ -4,9 +4,9 @@ import com.anezin.smash.core.domain.Room
 import com.anezin.smash.core.interfaces.LocalDataRepository
 
 class GetRoomFromMemory(
-    private val localDataRepository: LocalDataRepository
+    private val localRoomRepository: LocalDataRepository
 ){
     operator fun invoke(): Room {
-        return localDataRepository.getLocalRoom()
+        return localRoomRepository.getLocalRoom()
     }
 }

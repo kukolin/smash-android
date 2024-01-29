@@ -30,7 +30,7 @@ import com.anezin.smash.core.domain.Room
 import com.anezin.smash.infrastructure.factories.Factory
 
 class GameRoomScreenView {
-    lateinit var viewModel: GameRoomScreenViewModel
+    private lateinit var viewModel: GameRoomScreenViewModel
 
     @Composable
     fun Build(
@@ -53,8 +53,7 @@ class GameRoomScreenView {
     @Composable
     private fun Content(room: Room?, opponents: List<Player>?) {
         if (room == null) return
-        if (room.players == null) return
-        if (opponents == null) return
+//        if (opponents == null) return
 
         Column {
             Row(
@@ -63,9 +62,9 @@ class GameRoomScreenView {
                     .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Log.d("op", "asd" + room.players.toString())
-                for (op in opponents) {
-                    PlayerCell(op)
-                }
+//                for (op in opponents) {
+//                    PlayerCell(op)
+//                }
             }
             Spacer(modifier = Modifier.weight(5f))
             Row(

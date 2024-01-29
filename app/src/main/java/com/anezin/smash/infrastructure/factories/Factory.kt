@@ -1,15 +1,22 @@
 package com.anezin.smash.infrastructure.factories
 
-import com.anezin.smash.infrastructure.actions.GetMyIdFromMemory
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import com.anezin.smash.infrastructure.actions.GetMyIdFromSharedPrefs
 import com.anezin.smash.infrastructure.actions.GetRoom
 import com.anezin.smash.infrastructure.actions.GetRoomFromMemory
 import com.anezin.smash.infrastructure.actions.SaveRoomInMemory
-import com.anezin.smash.infrastructure.repositories.DummyFirebaseRepository
 import com.anezin.smash.infrastructure.repositories.FirebaseRoomRepository
 import com.anezin.smash.infrastructure.repositories.InMemoryLocalDataRepository
+import com.anezin.smash.infrastructure.repositories.SharedPrefsIdRepository
 import com.anezin.smash.presentation.gameroom.GameRoomScreenViewModel
+import com.anezin.smash.presentation.mainscreen.MainScreenViewModel
 import com.anezin.smash.presentation.roomscreen.RoomScreenViewModel
 import com.anezin.smash.presentation.searchroomscreen.SearchRoomScreenViewModel
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class Factory {
     companion object {
@@ -17,9 +24,7 @@ class Factory {
 //        private val firebaseRepository = DummyFirebaseRepository()
 
         private val localDataRepository = InMemoryLocalDataRepository()
-
         private val getRoomAction = GetRoom(firebaseRepository)
-        private val getMyIdAction = GetMyIdFromMemory(localDataRepository)
 
         private val saveRoomInMemory = SaveRoomInMemory(localDataRepository)
 
@@ -29,7 +34,13 @@ class Factory {
             SearchRoomScreenViewModel(getRoomAction, saveRoomInMemory)
 
         val roomScreenViewModel = RoomScreenViewModel(getRoomFromMemory)
+        fun mainScreenViewModel(context: Context) = MainScreenViewModel(localDataRepository, sharedPrefsIdRepository(context))
+        fun sharedPrefsIdRepository(context: Context) =
+            SharedPrefsIdRepository(context.dataStore)
 
-        val gameRoomScreenViewModel = GameRoomScreenViewModel(getRoomFromMemory, getMyIdAction)
+        private fun getMyIdAction(context: Context) =
+            GetMyIdFromSharedPrefs(sharedPrefsIdRepository(context))
+
+        val gameRoomScreenViewModel = GameRoomScreenViewModel(getRoomFromMemory, localDataRepository)
     }
 }

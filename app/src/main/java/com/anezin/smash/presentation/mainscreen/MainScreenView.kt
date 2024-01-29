@@ -9,18 +9,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.anezin.smash.Screen
+import com.anezin.smash.infrastructure.factories.Factory
 
 class MainScreenView {
 
     @Composable
-    fun Build(navController: NavController) {
-        Column() {
+    fun Build(
+        navController: NavController,
+        viewModel: MainScreenViewModel = Factory.mainScreenViewModel(LocalContext.current)
+    ) {
+        val myId by viewModel.idState.collectAsState(initial = "")
+        viewModel.getMyId()
+
+        Column {
             Row(
                 horizontalArrangement = Arrangement.Center, modifier = Modifier
                     .fillMaxWidth()
@@ -33,7 +43,7 @@ class MainScreenView {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize(),
             ) {
-                Button(onClick = {
+                if (myId.isNotBlank()) Button(onClick = {
                     navController.navigate(Screen.SearchRoomScreen.route)
                 }) {
                     Text(text = "Join room")
