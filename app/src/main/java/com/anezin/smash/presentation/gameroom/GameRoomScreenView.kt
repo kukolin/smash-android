@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,11 +17,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.anezin.smash.R
 import com.anezin.smash.core.domain.Player
@@ -41,36 +43,41 @@ class GameRoomScreenView {
         viewModel.initializeViewModel()
         val state by viewModel.uiState.collectAsState()
 
-        Content(state.room, state.opponents)
+        Content(state.room, state.uiOpponents)
     }
 
     @Preview(showSystemUi = true)
     @Composable
     private fun Preview() {
-        Content(dummyRoom, dummyRoom.players)
+        Content(dummyRoom, dummyOpponents)
     }
 
     @Composable
-    private fun Content(room: Room?, opponents: List<Player>?) {
+    private fun Content(room: Room?, uiOpponents: List<GameRoomScreenViewModel.UIOpponent>?) {
         if (room == null) return
-//        if (opponents == null) return
+        if (uiOpponents == null) return
 
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Row(
                 modifier = Modifier
-                    .weight(2f)
+                    .weight(5f)
                     .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Log.d("op", "asd" + room.players.toString())
-//                for (op in opponents) {
-//                    PlayerCell(op)
-//                }
+                for (op in uiOpponents) {
+                    PlayerCell(op)
+                }
             }
-            Spacer(modifier = Modifier.weight(5f))
+            Spacer(modifier = Modifier.weight(3f))
+            Text("0", fontSize = 50.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.weight(3f))
+            Text("Tour turn!", fontSize = 40.sp)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .weight(8f)
+                    .weight(6f)
                     .fillMaxSize(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -107,20 +114,30 @@ class GameRoomScreenView {
     }
 
     @Composable
-    private fun PlayerCell(player: Player) {
+    private fun PlayerCell(opponent: GameRoomScreenViewModel.UIOpponent) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
-            player.name?.let { Text(it) }
-            Image(ImageVector.vectorResource(R.drawable.avatar), contentDescription = "avatar")
+            Spacer(modifier = Modifier.weight(2f))
+            Text(opponent.opponent.name, modifier = Modifier.weight(1f))
+            Image(
+                ImageVector.vectorResource(R.drawable.avatar),
+                contentDescription = "avatar",
+                modifier = Modifier.weight(3f)
+            )
+            Image(
+                ImageVector.vectorResource(R.drawable.up_arrow),
+                contentDescription = "arrow",
+                modifier = Modifier.weight(1f).alpha(if(opponent.turnEnabled) 1f else 0f)
+            )
         }
     }
 
     companion object {
         private val dummyPlayer = Player("id", "name1", listOf())
-        private val dummyPlayers = listOf(dummyPlayer, dummyPlayer, dummyPlayer)
+        private val dummyOpponents = listOf(dummyPlayer, dummyPlayer, dummyPlayer).map { GameRoomScreenViewModel.UIOpponent(it,true) }
+            private val dummyPlayers = listOf(dummyPlayer, dummyPlayer, dummyPlayer)
         private val dummyRoom =
             Room(listOf(), "id4", "-NnBI5_cAHOVD4X8JTnQ", "roomName", dummyPlayers, true)
     }

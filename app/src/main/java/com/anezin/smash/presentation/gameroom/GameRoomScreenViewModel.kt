@@ -21,7 +21,7 @@ class GameRoomScreenViewModel(
     fun initializeViewModel() {
         room = getRoomFromMemory()
         val opponents = calculateOpponents()
-        _uiState.value = GameRoomViewState().copy(room = room, opponents = opponents)
+        _uiState.value = GameRoomViewState().copy(room = room, uiOpponents = opponents.map { UIOpponent(it) })
     }
 
     private fun calculateOpponents(): List<Player> {
@@ -48,5 +48,7 @@ class GameRoomScreenViewModel(
 
     }
 
-    data class GameRoomViewState(val room: Room? = null, val opponents: List<Player>? = null)
+    data class GameRoomViewState(val room: Room? = null, val uiOpponents: List<UIOpponent>? = null)
+
+    data class UIOpponent(val opponent: Player, val turnEnabled: Boolean = false)
 }
