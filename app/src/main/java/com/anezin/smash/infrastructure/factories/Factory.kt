@@ -30,7 +30,7 @@ class Factory {
         val searchRoomScreenViewModel =
             SearchRoomScreenViewModel(getRoomAction, saveRoomInMemory)
         val roomScreenViewModel = RoomScreenViewModel(getRoomFromMemory)
-        val gameRoomScreenViewModel = GameRoomScreenViewModel(getRoomFromMemory, localDataRepository)
+        val gameRoomScreenViewModel = GameRoomScreenViewModel(getRoomFromMemory, localDataRepository, firebaseRepository)
         private fun sharedPrefsIdRepository(context: Context) =
             SharedPrefsIdRepository(context.dataStore)
         fun mainScreenViewModel(context: Context) = MainScreenViewModel(localDataRepository, sharedPrefsIdRepository(context))

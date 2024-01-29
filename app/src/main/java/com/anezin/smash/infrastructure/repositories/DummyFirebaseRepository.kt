@@ -10,6 +10,11 @@ class DummyFirebaseRepository : RoomRepository {
         delay(1000)
         return dummyRoom
     }
+
+    override suspend fun saveRoomData(room: Room) {
+
+    }
+
     companion object {
         private val dummyPlayer1 = Player("id1", "name1",  listOf())
         private val dummyPlayer2 = Player("id2", "name2",  listOf())

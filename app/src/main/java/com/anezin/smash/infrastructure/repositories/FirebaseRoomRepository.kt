@@ -29,4 +29,8 @@ class FirebaseRoomRepository(
             }
         }
     }
+
+    override suspend fun saveRoomData(room: Room) {
+
+    }
 }

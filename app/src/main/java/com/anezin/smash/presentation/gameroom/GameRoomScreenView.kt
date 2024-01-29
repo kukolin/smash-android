@@ -42,18 +42,23 @@ class GameRoomScreenView {
         this.viewModel = viewModel
         viewModel.initializeViewModel()
         val state by viewModel.uiState.collectAsState()
+        val isMyTurn by viewModel.myTurnState.collectAsState()
 
-        Content(state.room, state.uiOpponents)
+        Content(state.room, state.uiOpponents, isMyTurn)
     }
 
     @Preview(showSystemUi = true)
     @Composable
     private fun Preview() {
-        Content(dummyRoom, dummyOpponents)
+        Content(dummyRoom, dummyOpponents, true)
     }
 
     @Composable
-    private fun Content(room: Room?, uiOpponents: List<GameRoomScreenViewModel.UIOpponent>?) {
+    private fun Content(
+        room: Room?,
+        uiOpponents: List<GameRoomScreenViewModel.UIOpponent>?,
+        isMyTurn: Boolean
+    ) {
         if (room == null) return
         if (uiOpponents == null) return
 
@@ -73,7 +78,7 @@ class GameRoomScreenView {
             Spacer(modifier = Modifier.weight(3f))
             Text("0", fontSize = 50.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.weight(3f))
-            Text("Tour turn!", fontSize = 40.sp)
+            Text("Tour turn!", fontSize = 40.sp, modifier = Modifier.alpha(if(isMyTurn) 1f else 0f))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
