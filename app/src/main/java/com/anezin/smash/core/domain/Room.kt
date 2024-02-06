@@ -9,4 +9,4 @@ data class Room(
     val started: Boolean
 )
 
-data class Player(val id: String, val name: String, val cards: List<Int>)
+data class Player(val id: String, val name: String, var cards: List<Int>)

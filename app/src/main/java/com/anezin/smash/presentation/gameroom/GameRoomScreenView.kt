@@ -70,7 +70,6 @@ class GameRoomScreenView {
                     .weight(5f)
                     .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Log.d("op", "asd" + room.players.toString())
                 for (op in uiOpponents) {
                     PlayerCell(op)
                 }
@@ -131,6 +130,7 @@ class GameRoomScreenView {
                 contentDescription = "avatar",
                 modifier = Modifier.weight(3f)
             )
+            Text("cards: " + opponent.opponent.cards.count(), modifier = Modifier.weight(1f))
             Image(
                 ImageVector.vectorResource(R.drawable.up_arrow),
                 contentDescription = "arrow",
@@ -140,7 +140,7 @@ class GameRoomScreenView {
     }
 
     companion object {
-        private val dummyPlayer = Player("id", "name1", listOf())
+        private val dummyPlayer = Player("id", "name1", listOf(0,2))
         private val dummyOpponents = listOf(dummyPlayer, dummyPlayer, dummyPlayer).map { GameRoomScreenViewModel.UIOpponent(it,true) }
             private val dummyPlayers = listOf(dummyPlayer, dummyPlayer, dummyPlayer)
         private val dummyRoom =

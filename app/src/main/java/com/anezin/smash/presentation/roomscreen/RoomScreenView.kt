@@ -14,12 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.anezin.smash.Screen
 import com.anezin.smash.core.domain.Player
 import com.anezin.smash.infrastructure.factories.Factory
 
 class RoomScreenView {
 
+    lateinit var viewModel: RoomScreenViewModel
     @Preview(showSystemUi = true)
     @Composable
     fun Preview() {
@@ -31,8 +31,9 @@ class RoomScreenView {
         navController: NavController,
         viewModel: RoomScreenViewModel = Factory.roomScreenViewModel
     ) {
-        viewModel.initializeViewModel()
-        val foundRoomState by viewModel.uiState.collectAsState()
+        this.viewModel = viewModel
+        this.viewModel.initializeViewModel()
+        val foundRoomState by this.viewModel.uiState.collectAsState()
 
         Content(navController, foundRoomState.room?.players)
     }
@@ -70,7 +71,7 @@ class RoomScreenView {
                 verticalArrangement = Arrangement.Center
             ) {
                 Button(onClick = {
-                    navController.navigate(Screen.GameRoomScreen.route)
+                    viewModel.onInitializeGameTaped(navController)
                 }) {
                     Text(text = "Empezar partida")
                 }
