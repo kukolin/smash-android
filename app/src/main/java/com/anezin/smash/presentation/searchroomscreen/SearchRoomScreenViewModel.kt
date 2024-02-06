@@ -16,18 +16,27 @@ class SearchRoomScreenViewModel(
     val saveRoomInMemory: SaveRoomInMemory
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SearchState())
-    val uiState: StateFlow<SearchState> = _uiState.asStateFlow()
+    private val _feedbackMessageState = MutableStateFlow("")
+    val feedbackMessageState: StateFlow<String> = _feedbackMessageState.asStateFlow()
 
+//    private val _uiState = MutableStateFlow(SearchState())
+//    val uiState: StateFlow<SearchState> = _uiState.asStateFlow()
+
+//    private val _uiState = MutableStateFlow(SearchState())
+//    val uiState: StateFlow<SearchState> = _uiState.asStateFlow()
     suspend fun searchRoom(roomIdText: String, navController: NavController) {
-        _uiState.value = SearchState().copy(loading = true)
+        _feedbackMessageState.value = "Cargando..."
         val resultRoomData = getRoom(roomIdText)
         if (resultRoomData.key.isNotBlank()) {
-            Log.d("searchRoom", "Creando sala nueva en memoria")
-            saveRoomInMemory(resultRoomData)
-            navController.navigate(Screen.RoomScreen.route)
+            if(resultRoomData.players.count() == 4) {
+                _feedbackMessageState.value = "Sala llena. Máximo 4 personas."
+                return
+            } else {
+                saveRoomInMemory(resultRoomData)
+                navController.navigate(Screen.RoomScreen.route)
+            }
         }
-        _uiState.value = SearchState().copy(loading = false, room = resultRoomData)
+        _feedbackMessageState.value = "No se encontró la sala."
     }
 }
 

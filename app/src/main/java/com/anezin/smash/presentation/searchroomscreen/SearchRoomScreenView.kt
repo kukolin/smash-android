@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.anezin.smash.infrastructure.factories.Factory
 import kotlinx.coroutines.launch
 
@@ -36,7 +37,7 @@ class SearchRoomScreenView {
         var text by remember {
             mutableStateOf("")
         }
-        val foundRoomState by viewModel.uiState.collectAsState()
+        val feedbackMessage by viewModel.feedbackMessageState.collectAsState()
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -48,8 +49,7 @@ class SearchRoomScreenView {
             TextField(value = text, onValueChange = { text = it })
             Spacer(modifier = Modifier.height(8.dp))
             val coroutineScope = rememberCoroutineScope()
-            if(foundRoomState.loading) Text(text = "Cargando...")
-            if(foundRoomState.room == null) Text(text = "No se encontró la sala.")
+            if(feedbackMessage.isNotEmpty()) Text(text = feedbackMessage)
 
             Button(onClick = {
                 coroutineScope.launch {
