@@ -24,13 +24,20 @@ class GameRoomScreenViewModel(
     private val _myTurnState = MutableStateFlow(false)
     val myTurnState: StateFlow<Boolean> = _myTurnState.asStateFlow()
 
+    val roomState: StateFlow<Room> = firebaseRoomRepository.roomState
+
     lateinit var room: Room
     fun initializeViewModel() {
         room = getRoomFromMemory()
         val opponents = calculateUiOpponents()
         checkIfMyTurn(room.currentTurn)
+        subscribeToTurnChange()
         _uiState.value =
             GameRoomViewState().copy(room = room, uiOpponents = opponents)
+    }
+
+    private fun subscribeToTurnChange() {
+        firebaseRoomRepository.subscribeToCardChange(room.key)
     }
 
     private fun checkIfMyTurn(currentTurnId: String) {

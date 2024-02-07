@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,8 +44,9 @@ class GameRoomScreenView {
         viewModel.initializeViewModel()
         val state by viewModel.uiState.collectAsState()
         val isMyTurn by viewModel.myTurnState.collectAsState()
+        val room by viewModel.roomState.collectAsState()
 
-        Content(state.room, state.uiOpponents, isMyTurn)
+        Content(room, state.uiOpponents, isMyTurn)
     }
 
     @Preview(showSystemUi = true)
@@ -134,7 +136,9 @@ class GameRoomScreenView {
             Image(
                 ImageVector.vectorResource(R.drawable.up_arrow),
                 contentDescription = "arrow",
-                modifier = Modifier.weight(1f).alpha(if(opponent.turnEnabled) 1f else 0f)
+                modifier = Modifier
+                    .weight(1f)
+                    .alpha(if (opponent.turnEnabled) 1f else 0f)
             )
         }
     }
