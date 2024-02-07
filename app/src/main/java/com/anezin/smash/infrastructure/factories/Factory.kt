@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.anezin.smash.infrastructure.actions.GetRoom
 import com.anezin.smash.infrastructure.actions.GetRoomFromMemory
+import com.anezin.smash.infrastructure.actions.SaveRoom
 import com.anezin.smash.infrastructure.actions.SaveRoomInMemory
 import com.anezin.smash.infrastructure.repositories.FirebaseRoomRepository
 import com.anezin.smash.infrastructure.repositories.InMemoryLocalDataRepository
@@ -24,11 +25,12 @@ class Factory {
         private val localDataRepository = InMemoryLocalDataRepository()
 
         private val getRoomAction = GetRoom(firebaseRepository)
+        private val saveRoomAction = SaveRoom(firebaseRepository)
         private val saveRoomInMemory = SaveRoomInMemory(localDataRepository)
         private val getRoomFromMemory = GetRoomFromMemory(localDataRepository)
 
         val searchRoomScreenViewModel =
-            SearchRoomScreenViewModel(getRoomAction, saveRoomInMemory)
+            SearchRoomScreenViewModel(getRoomAction, saveRoomAction, saveRoomInMemory, localDataRepository)
         val roomScreenViewModel = RoomScreenViewModel(getRoomFromMemory, firebaseRepository)
         val gameRoomScreenViewModel = GameRoomScreenViewModel(getRoomFromMemory, localDataRepository, firebaseRepository)
         private fun sharedPrefsIdRepository(context: Context) =

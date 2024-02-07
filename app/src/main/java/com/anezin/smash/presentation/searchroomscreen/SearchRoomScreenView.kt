@@ -48,13 +48,10 @@ class SearchRoomScreenView {
             text = "-NnBI5_cAHOVD4X8JTnQ"
             TextField(value = text, onValueChange = { text = it })
             Spacer(modifier = Modifier.height(8.dp))
-            val coroutineScope = rememberCoroutineScope()
             if(feedbackMessage.isNotEmpty()) Text(text = feedbackMessage)
 
             Button(onClick = {
-                coroutineScope.launch {
-                    viewModel.searchRoom(text, navController)
-                }
+                viewModel.searchRoom(text, navController)
             }) {
                 Text(text = "Go")
             }
