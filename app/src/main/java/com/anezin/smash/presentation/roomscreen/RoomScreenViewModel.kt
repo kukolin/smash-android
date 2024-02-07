@@ -7,14 +7,15 @@ import com.anezin.smash.Screen
 import com.anezin.smash.core.domain.Room
 import com.anezin.smash.core.interfaces.RoomRepository
 import com.anezin.smash.infrastructure.actions.GetRoomFromMemory
+import com.anezin.smash.infrastructure.actions.SaveRoom
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class RoomScreenViewModel(
-    val getRoomFromMemory: GetRoomFromMemory,
-    val roomRepository: RoomRepository
+    private val getRoomFromMemory: GetRoomFromMemory,
+    private val saveRoom: SaveRoom
 ) : ViewModel(
 
 ) {
@@ -29,8 +30,8 @@ class RoomScreenViewModel(
     fun onInitializeGameTaped(navController: NavController) {
         viewModelScope.launch {
             shuffleDeckAndAssign()
+            navController.navigate(Screen.GameRoomScreen.route)
         }
-        navController.navigate(Screen.GameRoomScreen.route)
     }
 
     private suspend fun shuffleDeckAndAssign() {
@@ -40,7 +41,7 @@ class RoomScreenViewModel(
         for ((index, player) in room.players.withIndex()) {
             player.cards = cardsToGive[index]
         }
-        roomRepository.saveRoomData(room)
+        saveRoom(room)
     }
 
     private fun generateCards(): List<Int> {
