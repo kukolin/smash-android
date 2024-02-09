@@ -70,14 +70,24 @@ class GameRoomScreenViewModel(
 
     fun drawCard() {
         val nextId = calculateNextTurnId()
-        val newRoom = room.copy(currentTurn = nextId)
-        localDataRepository.saveLocalRoom(newRoom)
         viewModelScope.launch {
+            calculateUiOpponents()
+            checkIfMyTurn(calculateNextTurnId())
+            literallyDrawACard()
+            val newRoom = room.copy(currentTurn = nextId)
+            localDataRepository.saveLocalRoom(newRoom)
             firebaseRoomRepository.saveRoomData(newRoom)
+            _uiState.value = GameRoomViewState().copy(room = newRoom, uiOpponents = calculateUiOpponents())
         }
-        calculateUiOpponents()
-        checkIfMyTurn(calculateNextTurnId())
-        _uiState.value = GameRoomViewState().copy(room = newRoom, uiOpponents = calculateUiOpponents())
+    }
+
+    private suspend fun literallyDrawACard() {
+        val cards = room.players.first { it.id == localDataRepository.getMyId() }.cards
+        val card = cards[0]
+        cards.drop(1)
+        room.players.first { it.id == localDataRepository.getMyId() }.cards = cards
+        room.cardStack.add(card)
+        firebaseRoomRepository.saveRoomData(room)
     }
 
     data class GameRoomViewState(val room: Room? = null, val uiOpponents: List<UIOpponent>? = null)

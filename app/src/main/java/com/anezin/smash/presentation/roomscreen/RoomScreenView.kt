@@ -81,6 +81,6 @@ class RoomScreenView {
 
     companion object {
         val dummyPlayers =
-            listOf(Player("id", "name1", listOf()), Player("id", "name2", listOf()))
+            listOf(Player("id", "name1", mutableListOf()), Player("id", "name2", mutableListOf()))
     }
 }

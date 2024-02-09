@@ -21,7 +21,7 @@ import kotlin.coroutines.resumeWithException
 class FirebaseRoomRepository(
     private val database: FirebaseDatabase = Firebase.database
 ) : RoomRepository {
-    private val _roomState = MutableStateFlow(Room(listOf(), "","","", listOf(), false))
+    private val _roomState = MutableStateFlow(Room(mutableListOf(), "","","", listOf(), false))
     val roomState: StateFlow<Room> = _roomState.asStateFlow()
     override suspend fun getRoomData(roomId: String): Room {
         return suspendCancellableCoroutine { continuation ->

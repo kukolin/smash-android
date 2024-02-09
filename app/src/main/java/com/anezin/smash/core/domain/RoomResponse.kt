@@ -3,7 +3,7 @@ package com.anezin.smash.core.domain
 import com.google.gson.annotations.SerializedName
 
 data class RoomResponse(
-    @SerializedName("cardStack") val cardStack: List<Int> = listOf(),
+    @SerializedName("cardStack") val cardStack: MutableList<Int> = mutableListOf(),
     @SerializedName("currentTurn") val currentTurn: String = "",
     @SerializedName("key") val key: String = "",
     @SerializedName("name") val name: String = "",
@@ -25,7 +25,7 @@ data class RoomResponse(
 data class PlayerResponse(
     @SerializedName("id") val id: String = "",
     @SerializedName("name") val name: String = "",
-    @SerializedName("cards") val cards: List<Int> = listOf()
+    @SerializedName("cards") val cards: MutableList<Int> = mutableListOf()
 ) {
 
     fun toPlayer(): Player {

@@ -39,7 +39,7 @@ class RoomScreenViewModel(
         val chunkSize = 60 / room.players.count()
         val cardsToGive = cards.chunked(chunkSize)
         for ((index, player) in room.players.withIndex()) {
-            player.cards = cardsToGive[index]
+            player.cards = cardsToGive[index].toMutableList()
         }
         saveRoom(room)
     }

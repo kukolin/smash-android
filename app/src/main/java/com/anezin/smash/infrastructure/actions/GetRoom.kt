@@ -12,7 +12,7 @@ class GetRoom(
             roomRepository.getRoomData(roomId)
         }catch (e: Exception){
             Log.e("RoomRepository error", "No se pudo traer la data del room")
-            Room(listOf(), "", "", "", listOf(), false)
+            Room(mutableListOf(), "", "", "", listOf(), false)
         }
     }
 }

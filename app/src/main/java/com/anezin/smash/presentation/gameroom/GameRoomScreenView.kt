@@ -144,10 +144,10 @@ class GameRoomScreenView {
     }
 
     companion object {
-        private val dummyPlayer = Player("id", "name1", listOf(0,2))
+        private val dummyPlayer = Player("id", "name1", mutableListOf(0,2))
         private val dummyOpponents = listOf(dummyPlayer, dummyPlayer, dummyPlayer).map { GameRoomScreenViewModel.UIOpponent(it,true) }
             private val dummyPlayers = listOf(dummyPlayer, dummyPlayer, dummyPlayer)
         private val dummyRoom =
-            Room(listOf(), "id4", "-NnBI5_cAHOVD4X8JTnQ", "roomName", dummyPlayers, true)
+            Room(mutableListOf(), "id4", "-NnBI5_cAHOVD4X8JTnQ", "roomName", dummyPlayers, true)
     }
 }

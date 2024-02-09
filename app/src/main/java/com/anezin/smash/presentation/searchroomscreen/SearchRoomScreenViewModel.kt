@@ -48,7 +48,7 @@ class SearchRoomScreenViewModel(
     private suspend fun addMeToRoom(room: Room) {
         val newPlayers: MutableList<Player> = room.players.toMutableList()
 //        newPlayers.add(Player(localDataRepository.getMyId(), localDataRepository.getMyName(), listOf()))
-        newPlayers.add(Player(localDataRepository.getMyId(), "asddsa", listOf()))
+        newPlayers.add(Player(localDataRepository.getMyId(), "asddsa", mutableListOf()))
         val newRoom = room.copy(players = newPlayers)
         saveRoomInMemory(newRoom)
         saveRoom(newRoom)
