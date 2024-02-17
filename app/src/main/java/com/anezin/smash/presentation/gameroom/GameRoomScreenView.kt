@@ -55,7 +55,7 @@ class GameRoomScreenView {
 
     @Composable
     private fun Content(
-        room: Room?,
+        room: Room,
         uiOpponents: List<Player>,
         me: Player
     ) {
@@ -88,11 +88,13 @@ class GameRoomScreenView {
                 DrawCardButton(Modifier.weight(3f))
                 Spacer(Modifier.weight(0.4f))
             }
+            Text("Tus cartas: ${viewModel.getMe(room).cards.count()}", fontSize = 30.sp)
+            Spacer(Modifier.weight(1f))
         }
     }
 
-    fun getLastCardFromStack(room: Room?): String{
-        return room?.cardStack?.last().toString()
+    fun getLastCardFromStack(room: Room): String{
+        return room.cardStack.last().toString()
     }
     @Composable
     private fun CardsImage(modifier: Modifier) {
@@ -143,7 +145,8 @@ class GameRoomScreenView {
 
     companion object {
         private val dummyPlayer = Player("id", "name1", mutableListOf(0,2), false, false)
-        private val dummyPlayers = listOf(dummyPlayer, dummyPlayer, dummyPlayer)
+        private val dummyPlayerMe = Player("id", "name1", mutableListOf(0,2, 3, 4), true, false)
+        private val dummyPlayers = listOf(dummyPlayer, dummyPlayer, dummyPlayerMe)
         private val dummyRoom =
             Room(mutableListOf(1, 2, 3), "id4", "-NnBI5_cAHOVD4X8JTnQ", "roomName", dummyPlayers, true)
     }
