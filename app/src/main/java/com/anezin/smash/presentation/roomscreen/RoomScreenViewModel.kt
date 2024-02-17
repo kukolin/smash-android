@@ -16,7 +16,7 @@ class RoomScreenViewModel(
 ) : ViewModel() {
     val roomState = roomRepository.roomState
 
-    fun subscribeToRoomChange() {
+    init {
         roomRepository.subscribeToCardChange("-NnBI5_cAHOVD4X8JTnQ")
     }
     fun onInitializeGameTaped(navController: NavController) {

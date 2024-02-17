@@ -33,7 +33,6 @@ class RoomScreenView {
         viewModel: RoomScreenViewModel = Factory.roomScreenViewModel
     ) {
         this.viewModel = viewModel
-        viewModel.subscribeToRoomChange()
         val foundRoomState by this.viewModel.roomState.observeAsState()
 
         Content(navController, foundRoomState?.players)

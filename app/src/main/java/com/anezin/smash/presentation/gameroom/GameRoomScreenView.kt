@@ -39,7 +39,6 @@ class GameRoomScreenView {
         viewModel: GameRoomScreenViewModel = Factory.gameRoomScreenViewModel
     ) {
         this.viewModel = viewModel
-        viewModel.subscribeToTurnChange()
         val room by viewModel.roomState.observeAsState()
         room?.let {
             val opponents = viewModel.getOpponents(it)
@@ -73,7 +72,7 @@ class GameRoomScreenView {
                 }
             }
             Spacer(modifier = Modifier.weight(3f))
-            Text("0", fontSize = 50.sp, fontWeight = FontWeight.Bold)
+            Text(getLastCardFromStack(room), fontSize = 50.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.weight(3f))
             Text("Tour turn!", fontSize = 40.sp, modifier = Modifier.alpha(if(me.turnEnabled) 1f else 0f))
             Row(
@@ -92,6 +91,9 @@ class GameRoomScreenView {
         }
     }
 
+    fun getLastCardFromStack(room: Room?): String{
+        return room?.cardStack?.last().toString()
+    }
     @Composable
     private fun CardsImage(modifier: Modifier) {
         Image(
@@ -143,6 +145,6 @@ class GameRoomScreenView {
         private val dummyPlayer = Player("id", "name1", mutableListOf(0,2), false, false)
         private val dummyPlayers = listOf(dummyPlayer, dummyPlayer, dummyPlayer)
         private val dummyRoom =
-            Room(mutableListOf(), "id4", "-NnBI5_cAHOVD4X8JTnQ", "roomName", dummyPlayers, true)
+            Room(mutableListOf(1, 2, 3), "id4", "-NnBI5_cAHOVD4X8JTnQ", "roomName", dummyPlayers, true)
     }
 }

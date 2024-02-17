@@ -21,7 +21,7 @@ class GameRoomScreenViewModel(
 ) : ViewModel(
 ) {
     val roomState = firebaseRoomRepository.roomState
-    fun subscribeToTurnChange() {
+    init {
         firebaseRoomRepository.subscribeToCardChange("-NnBI5_cAHOVD4X8JTnQ")
     }
 
