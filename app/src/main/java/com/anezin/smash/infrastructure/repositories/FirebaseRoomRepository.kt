@@ -1,6 +1,8 @@
 package com.anezin.smash.infrastructure.repositories
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.anezin.smash.core.domain.Room
 import com.anezin.smash.core.domain.RoomResponse
 import com.anezin.smash.core.interfaces.RoomRepository
@@ -17,20 +19,23 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class FirebaseRoomRepository(
     private val database: FirebaseDatabase = Firebase.database
 ) : RoomRepository {
-    private val _roomState = MutableStateFlow(Room(mutableListOf(), "","","", listOf(), false))
-    val roomState: StateFlow<Room> = _roomState.asStateFlow()
+    val roomState = MutableLiveData(Room(mutableListOf(), "","","", listOf(), false))
     override suspend fun getRoomData(roomId: String): Room {
         return suspendCancellableCoroutine { continuation ->
             val myRef = database.getReference("rooms/$roomId")
+            Log.d("pidiendo data", roomId)
             myRef.get().addOnSuccessListener { snapshot ->
+                Log.d("entro", "entro bien")
                 val roomResponse = snapshot.getValue<RoomResponse>() ?: throw Exception()
+                roomState.value = roomResponse.toRoom()
                 continuation.resume(roomResponse.toRoom())
             }.addOnFailureListener { exception ->
-                Log.e("firebase", "Error getting data", exception)
+                Log.e("firebase", "Error", exception)
                 continuation.resumeWithException(exception)
             }
         }
@@ -42,7 +47,8 @@ class FirebaseRoomRepository(
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val roomResponse = dataSnapshot.getValue<RoomResponse>()
                 if (roomResponse != null) {
-                    _roomState.value = roomResponse.toRoom()
+                    Log.d("FirebaseChanged", roomResponse.toString());
+                    roomState.value = roomResponse.toRoom()
                 } else {
                     Log.e("FirebaseRoomRepository", "Room data is null")
                 }

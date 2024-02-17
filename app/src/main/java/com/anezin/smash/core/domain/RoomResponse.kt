@@ -29,6 +29,6 @@ data class PlayerResponse(
 ) {
 
     fun toPlayer(): Player {
-        return Player(id, name, cards)
+        return Player(id, name, cards, false, false)
     }
 }

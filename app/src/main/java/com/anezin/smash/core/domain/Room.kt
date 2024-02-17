@@ -9,4 +9,10 @@ data class Room(
     val started: Boolean
 )
 
-data class Player(val id: String, val name: String, var cards: MutableList<Int>)
+data class Player(
+    val id: String,
+    val name: String,
+    var cards: MutableList<Int>,
+    val isMe: Boolean,
+    var turnEnabled: Boolean
+)

@@ -1,32 +1,24 @@
 package com.anezin.smash.presentation.roomscreen
 
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.anezin.smash.Screen
 import com.anezin.smash.core.domain.Room
-import com.anezin.smash.core.interfaces.RoomRepository
-import com.anezin.smash.infrastructure.actions.GetRoomFromMemory
-import com.anezin.smash.infrastructure.actions.SaveRoom
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.anezin.smash.infrastructure.repositories.FirebaseRoomRepository
 import kotlinx.coroutines.launch
 
 class RoomScreenViewModel(
-    private val getRoomFromMemory: GetRoomFromMemory,
-    private val saveRoom: SaveRoom
-) : ViewModel(
+    private val roomRepository: FirebaseRoomRepository
+) : ViewModel() {
+    val roomState = roomRepository.roomState
 
-) {
-    private val _uiState = MutableStateFlow(RoomViewState())
-    val uiState: StateFlow<RoomViewState> = _uiState.asStateFlow()
-    lateinit var room: Room
-    fun initializeViewModel() {
-        room = getRoomFromMemory()
-        _uiState.value = RoomViewState().copy(room = room)
+    fun subscribeToRoomChange() {
+        roomRepository.subscribeToCardChange("-NnBI5_cAHOVD4X8JTnQ")
     }
-
     fun onInitializeGameTaped(navController: NavController) {
         viewModelScope.launch {
             shuffleDeckAndAssign()
@@ -35,13 +27,14 @@ class RoomScreenViewModel(
     }
 
     private suspend fun shuffleDeckAndAssign() {
+        val newRoom: Room = roomState.value!!
         val cards = generateCards()
-        val chunkSize = 60 / room.players.count()
+        val chunkSize = 60 / newRoom.players.count()
         val cardsToGive = cards.chunked(chunkSize)
-        for ((index, player) in room.players.withIndex()) {
+        for ((index, player) in newRoom.players.withIndex()) {
             player.cards = cardsToGive[index].toMutableList()
         }
-        saveRoom(room)
+        roomRepository.saveRoomData(newRoom)
     }
 
     private fun generateCards(): List<Int> {
@@ -54,5 +47,3 @@ class RoomScreenViewModel(
         return cards.shuffled()
     }
 }
-
-data class RoomViewState(val room: Room? = null)

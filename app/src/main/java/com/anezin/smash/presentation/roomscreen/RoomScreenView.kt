@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,10 +33,10 @@ class RoomScreenView {
         viewModel: RoomScreenViewModel = Factory.roomScreenViewModel
     ) {
         this.viewModel = viewModel
-        this.viewModel.initializeViewModel()
-        val foundRoomState by this.viewModel.uiState.collectAsState()
+        viewModel.subscribeToRoomChange()
+        val foundRoomState by this.viewModel.roomState.observeAsState()
 
-        Content(navController, foundRoomState.room?.players)
+        Content(navController, foundRoomState?.players)
     }
 
     @Composable
@@ -81,6 +82,6 @@ class RoomScreenView {
 
     companion object {
         val dummyPlayers =
-            listOf(Player("id", "name1", mutableListOf()), Player("id", "name2", mutableListOf()))
+            listOf(Player("id", "name1", mutableListOf(), false, false), Player("id", "name2", mutableListOf(), false, false))
     }
 }

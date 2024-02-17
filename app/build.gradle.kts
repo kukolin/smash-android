@@ -61,6 +61,7 @@ dependencies {
     implementation("com.google.firebase:firebase-database:20.3.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.1")
 
 
     testImplementation("junit:junit:4.13.2")
