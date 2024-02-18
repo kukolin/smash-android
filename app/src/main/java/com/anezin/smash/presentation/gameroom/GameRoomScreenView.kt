@@ -45,7 +45,6 @@ class GameRoomScreenView {
         val room by viewModel.roomState.observeAsState()
         val smashState by viewModel.smashState.collectAsState()
         val timerState by viewModel.timerState.collectAsState()
-        val smashTimesState by viewModel.smashTimesState.observeAsState()
         val smashButtonState by viewModel.smashButtonState.collectAsState()
 
         Log.d("redibujado", "redibujado")

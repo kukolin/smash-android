@@ -20,7 +20,6 @@ class GameRoomScreenViewModel(
 ) : ViewModel(
 ) {
     val roomState = firebaseRoomRepository.roomState
-    val smashTimesState = firebaseRoomRepository.smashTimeState
 
     private val _smashState = MutableStateFlow(false)
     val smashState = _smashState.asStateFlow()
@@ -150,7 +149,7 @@ class GameRoomScreenViewModel(
         timerStarted = false
         viewModelScope.launch {
             roomState.value?.let {room ->
-                val smashTimes = smashTimesState.value ?: mutableListOf()
+                val smashTimes = firebaseRoomRepository.smashTimeState.value ?: mutableListOf()
                 smashTimes.add(SmashTime(localDataRepository.getMyId(), _currentTime))
                 firebaseRoomRepository.saveSmashTimeData(room.key, smashTimes.toList())
             }
