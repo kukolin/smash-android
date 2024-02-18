@@ -1,10 +1,11 @@
 package com.anezin.smash.infrastructure.repositories
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.anezin.smash.core.domain.Room
 import com.anezin.smash.core.domain.RoomResponse
+import com.anezin.smash.core.domain.SmashTime
+import com.anezin.smash.core.domain.SmashTimeResponse
 import com.anezin.smash.core.interfaces.RoomRepository
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
@@ -13,21 +14,18 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 class FirebaseRoomRepository(
     private val database: FirebaseDatabase = Firebase.database
 ) : RoomRepository {
-    val roomState = MutableLiveData(Room(mutableListOf(), "","","", listOf(), false))
+    val roomState = MutableLiveData(Room(mutableListOf(), "", "", "", listOf(), false))
+    val smashTimeState = MutableLiveData(mutableListOf<SmashTime>())
     override suspend fun getRoomData(roomId: String): Room {
         return suspendCancellableCoroutine { continuation ->
-            val myRef = database.getReference("rooms/$roomId")
+            val myRef = database.getReference("rooms/$roomId/room")
             Log.d("pidiendo data", roomId)
             myRef.get().addOnSuccessListener { snapshot ->
                 Log.d("entro", "entro bien")
@@ -42,7 +40,7 @@ class FirebaseRoomRepository(
     }
 
     override fun subscribeToCardChange(roomId: String): ValueEventListener {
-        val myRef = database.getReference("rooms/$roomId")
+        val myRef = database.getReference("rooms/$roomId/room")
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val roomResponse = dataSnapshot.getValue<RoomResponse>()
@@ -62,8 +60,35 @@ class FirebaseRoomRepository(
         return postListener
     }
 
+    override fun subscribeToSmashTimeChange(roomId: String): ValueEventListener {
+        val myRef = database.getReference("rooms/$roomId/smashTime")
+        val postListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val smashResponse = dataSnapshot.getValue<MutableList<SmashTimeResponse>>()
+                if (smashResponse != null) {
+                    Log.d("FirebaseChanged", smashResponse.toString());
+                    smashTimeState.value = smashResponse.map { it.toSmashTime() }.toMutableList()
+                } else {
+                    smashTimeState.value = emptyList<SmashTime>().toMutableList()
+                    Log.e("FirebaseRoomRepository", "smashTime data is null")
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w("FirebaseRoomRepository", "loadPost:onCancelled", databaseError.toException())
+            }
+        }
+        myRef.addValueEventListener(postListener)
+        return postListener
+    }
+
     override suspend fun saveRoomData(room: Room) {
-        val myRef = database.getReference("rooms/${room.key}")
+        val myRef = database.getReference("rooms/${room.key}/room")
         myRef.setValue(room)
+    }
+
+    override suspend fun saveSmashTimeData(roomKey: String, smashTime: List<SmashTime>) {
+        val myRef = database.getReference("rooms/$roomKey/smashTime")
+        myRef.setValue(smashTime)
     }
 }

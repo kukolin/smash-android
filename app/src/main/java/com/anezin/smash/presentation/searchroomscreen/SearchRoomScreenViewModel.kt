@@ -39,10 +39,10 @@ class SearchRoomScreenViewModel(
                         _feedbackMessageState.value = "No se encontró la sala."
                         return@launch
                     }
-                    if (room.players.count() == 4) {
-                        _feedbackMessageState.value = "Sala llena. Máximo 4 personas."
-                        return@launch
-                    }
+//                    if (room.players.count() == 4) {
+//                        _feedbackMessageState.value = "Sala llena. Máximo 4 personas."
+//                        return@launch
+//                    }
                     addMeToRoom(room)
                     navController.navigate(Screen.RoomScreen.route)
                 }
@@ -52,6 +52,7 @@ class SearchRoomScreenViewModel(
     private suspend fun addMeToRoom(room: Room) {
         val newPlayers: MutableList<Player> = room.players.toMutableList()
 //        newPlayers.add(Player(localDataRepository.getMyId(), localDataRepository.getMyName(), listOf()))
+        newPlayers.removeIf { it.id == localDataRepository.getMyId() }
         newPlayers.add(
             Player(
                 localDataRepository.getMyId(),

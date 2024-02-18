@@ -2,6 +2,7 @@ package com.anezin.smash.infrastructure.repositories
 
 import com.anezin.smash.core.domain.Player
 import com.anezin.smash.core.domain.Room
+import com.anezin.smash.core.domain.SmashTime
 import com.anezin.smash.core.interfaces.RoomRepository
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.delay
@@ -16,6 +17,14 @@ class DummyFirebaseRepository : RoomRepository {
     }
 
     override fun subscribeToCardChange(roomId: String): ValueEventListener {
+        TODO("Not yet implemented")
+    }
+
+    override fun subscribeToSmashTimeChange(roomId: String): ValueEventListener {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun saveSmashTimeData(roomKey: String, smashTime: List<SmashTime>) {
         TODO("Not yet implemented")
     }
 

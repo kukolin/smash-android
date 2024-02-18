@@ -1,12 +1,12 @@
 package com.anezin.smash.core.domain
 
 data class Room(
-    val cardStack: MutableList<Int>,
+    var cardStack: MutableList<Int>,
     val currentTurn: String,
     val key: String,
     val name: String,
     val players: List<Player>,
-    val started: Boolean
+    val started: Boolean,
 )
 
 data class Player(

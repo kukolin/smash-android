@@ -1,5 +1,6 @@
 package com.anezin.smash.presentation.gameroom
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -9,9 +10,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -40,24 +43,33 @@ class GameRoomScreenView {
     ) {
         this.viewModel = viewModel
         val room by viewModel.roomState.observeAsState()
+        val smashState by viewModel.smashState.collectAsState()
+        val timerState by viewModel.timerState.collectAsState()
+        val smashTimesState by viewModel.smashTimesState.observeAsState()
+        val smashButtonState by viewModel.smashButtonState.collectAsState()
+
+        Log.d("redibujado", "redibujado")
         room?.let {
             val opponents = viewModel.getOpponents(it)
             val me = viewModel.getMe(it)
-            Content(it, opponents, me)
+            Content(it, opponents, me, smashState, timerState, smashButtonState)
         }
     }
 
     @Preview(showSystemUi = true)
     @Composable
     private fun Preview() {
-        Content(dummyRoom, dummyPlayers, dummyPlayer)
+        Content(dummyRoom, dummyPlayers, dummyPlayer, true, "1:00:00", true)
     }
 
     @Composable
     private fun Content(
         room: Room,
         uiOpponents: List<Player>,
-        me: Player
+        me: Player,
+        smashState: Boolean,
+        timerState: String,
+        smashButtonState: Boolean
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -73,11 +85,17 @@ class GameRoomScreenView {
             }
             Spacer(modifier = Modifier.weight(3f))
             Text(getLastCardFromStack(room), fontSize = 50.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.weight(3f))
-            Text(
+            if (!smashState) Spacer(modifier = Modifier.weight(3f))
+            if (!smashState) Text(
                 "Tour turn!",
                 fontSize = 40.sp,
                 modifier = Modifier.alpha(if (me.turnEnabled) 1f else 0f)
+            )
+            if (smashState) SmashButton(
+                modifier = Modifier
+                    .weight(4f),
+                timerState,
+                smashButtonState
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -126,6 +144,23 @@ class GameRoomScreenView {
     }
 
     @Composable
+    private fun SmashButton(modifier: Modifier, timerState: String, smashButtonState: Boolean) {
+        Button(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp),
+            border = BorderStroke(1.dp, Color.Magenta),
+            enabled = smashButtonState,
+            onClick = {
+                viewModel.stopTimerAndNotify()
+            },
+        ) {
+            Text(text = "Smash!", fontSize = 40.sp)
+        }
+        Text(text = "Time: $timerState", fontSize = 20.sp)
+    }
+
+    @Composable
     private fun PlayerCell(opponent: Player) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -150,8 +185,16 @@ class GameRoomScreenView {
     }
 
     companion object {
-        private val dummyPlayer = Player("id", "name1", mutableListOf(0, 2), false, false)
-        private val dummyPlayerMe = Player("id", "name1", mutableListOf(0, 2, 3, 4), true, false)
+        private val dummyPlayer = Player(
+            "id", "name1", mutableListOf(0, 2),
+            isMe = false,
+            turnEnabled = false
+        )
+        private val dummyPlayerMe = Player(
+            "id", "name1", mutableListOf(0, 2, 3, 4),
+            isMe = true,
+            turnEnabled = false
+        )
         private val dummyPlayers = listOf(dummyPlayer, dummyPlayer, dummyPlayerMe)
         private val dummyRoom =
             Room(
