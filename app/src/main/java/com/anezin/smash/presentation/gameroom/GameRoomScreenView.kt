@@ -47,7 +47,6 @@ class GameRoomScreenView {
         val timerState by viewModel.timerState.collectAsState()
         val smashButtonState by viewModel.smashButtonState.collectAsState()
 
-        Log.d("redibujado", "redibujado")
         room?.let {
             val opponents = viewModel.getOpponents(it)
             val me = viewModel.getMe(it)
@@ -109,6 +108,8 @@ class GameRoomScreenView {
                 DrawCardButton(Modifier.weight(3f), me.turnEnabled)
                 Spacer(Modifier.weight(0.4f))
             }
+            Text("Turno número: ${viewModel.calculateTurnNumber(room)}", fontSize = 30.sp)
+            Text("Carta anterior: ${viewModel.calculatePreviousCard(room)}", fontSize = 30.sp)
             Text("Tus cartas: ${viewModel.getMe(room).cards.count()}", fontSize = 30.sp)
             Spacer(Modifier.weight(1f))
         }

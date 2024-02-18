@@ -53,6 +53,9 @@ class GameRoomScreenViewModel(
                 timeList.sortBy { it.time }
                 room.players.first { it.id == timeList.last().id }.cards.addAll(room.cardStack)
                 room.cardStack = emptyList<Int>().toMutableList()
+                _smashButtonState.value = false
+                _smashState.value = false
+                firebaseRoomRepository.smashTimeState.value = mutableListOf()
                 viewModelScope.launch {
                     firebaseRoomRepository.saveRoomData(room)
                     firebaseRoomRepository.saveSmashTimeData(room.key, emptyList())
@@ -96,16 +99,25 @@ class GameRoomScreenViewModel(
     }
 
     private fun checkIfSmash(room: Room) {
-        if(room.cardStack.count() < 2){
-            _smashState.value = false
-            return
-        }
-        val lastCard = room.cardStack.reversed()[0]
-        val anteLastCard = room.cardStack.reversed()[1]
-        if (lastCard == anteLastCard) {
+        _smashState.value = checkIfCardEqualsTurnNumber(room) || checkIfCardEqualsPrevious(room)
+    }
+
+    private fun checkIfCardEqualsTurnNumber(room: Room): Boolean {
+        if (calculateTurnNumber(room) == 0) return false
+        if(calculateTurnNumber(room) == calculateLastCard(room)) {
             startTimer()
+            return true
         }
-        _smashState.value = lastCard == anteLastCard
+        return false
+    }
+
+    private fun checkIfCardEqualsPrevious(room: Room): Boolean  {
+        if (calculateLastCard(room) == 0) return false
+        if (calculateLastCard(room) == calculatePreviousCard(room)) {
+            startTimer()
+            return true
+        }
+        return false
     }
 
     fun getOpponents(room: Room): List<Player> {
@@ -149,10 +161,29 @@ class GameRoomScreenViewModel(
         timerStarted = false
         viewModelScope.launch {
             roomState.value?.let {room ->
-                val smashTimes = firebaseRoomRepository.smashTimeState.value ?: mutableListOf()
-                smashTimes.add(SmashTime(localDataRepository.getMyId(), _currentTime))
-                firebaseRoomRepository.saveSmashTimeData(room.key, smashTimes.toList())
+                val myTime = SmashTime(localDataRepository.getMyId(), _currentTime)
+                if(firebaseRoomRepository.smashTimeState.value == mutableListOf<SmashTime>()) {
+                    firebaseRoomRepository.saveSmashTimeData(room.key, mutableListOf(myTime))
+                } else {
+                    val list = firebaseRoomRepository.smashTimeState.value ?: mutableListOf()
+                    list.add(myTime)
+                    firebaseRoomRepository.saveSmashTimeData(room.key, list.toList())
+                }
             }
         }
+    }
+    private fun calculateLastCard(room: Room): Int {
+        if(room.cardStack.isEmpty()) return 0
+        return room.cardStack.reversed()[0]
+    }
+    fun calculatePreviousCard(room: Room): Int {
+        if(room.cardStack.count() < 2) return 0
+        return room.cardStack.reversed()[1]
+    }
+
+    fun calculateTurnNumber(room: Room): Int {
+        if(room.cardStack.isEmpty()) return 0
+        if(room.cardStack.count() % 15 == 0) return 15
+        return room.cardStack.count() % 15
     }
 }

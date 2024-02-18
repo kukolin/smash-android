@@ -69,7 +69,7 @@ class FirebaseRoomRepository(
                     Log.d("FirebaseChanged", smashResponse.toString());
                     smashTimeState.value = smashResponse.map { it.toSmashTime() }.toMutableList()
                 } else {
-                    smashTimeState.value = emptyList<SmashTime>().toMutableList()
+                    smashTimeState.value = mutableListOf()
                     Log.e("FirebaseRoomRepository", "smashTime data is null")
                 }
             }
