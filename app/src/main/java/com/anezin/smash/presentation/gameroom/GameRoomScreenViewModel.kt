@@ -1,6 +1,7 @@
 package com.anezin.smash.presentation.gameroom
 
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel

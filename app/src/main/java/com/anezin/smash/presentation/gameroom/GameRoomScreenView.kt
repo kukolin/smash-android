@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -28,7 +29,6 @@ import com.anezin.smash.R
 import com.anezin.smash.core.domain.Player
 import com.anezin.smash.core.domain.Room
 import com.anezin.smash.infrastructure.factories.Factory
-import androidx.compose.runtime.livedata.observeAsState
 
 class GameRoomScreenView {
     private lateinit var viewModel: GameRoomScreenViewModel
@@ -74,7 +74,11 @@ class GameRoomScreenView {
             Spacer(modifier = Modifier.weight(3f))
             Text(getLastCardFromStack(room), fontSize = 50.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.weight(3f))
-            Text("Tour turn!", fontSize = 40.sp, modifier = Modifier.alpha(if(me.turnEnabled) 1f else 0f))
+            Text(
+                "Tour turn!",
+                fontSize = 40.sp,
+                modifier = Modifier.alpha(if (me.turnEnabled) 1f else 0f)
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -85,7 +89,7 @@ class GameRoomScreenView {
                 Spacer(Modifier.weight(0.4f))
                 CardsImage(Modifier.weight(3f))
                 Spacer(Modifier.weight(1f))
-                DrawCardButton(Modifier.weight(3f))
+                DrawCardButton(Modifier.weight(3f), me.turnEnabled)
                 Spacer(Modifier.weight(0.4f))
             }
             Text("Tus cartas: ${viewModel.getMe(room).cards.count()}", fontSize = 30.sp)
@@ -93,9 +97,10 @@ class GameRoomScreenView {
         }
     }
 
-    fun getLastCardFromStack(room: Room): String{
-        return room.cardStack.last().toString()
+    private fun getLastCardFromStack(room: Room): String {
+        return room.cardStack.lastOrNull()?.toString() ?: ""
     }
+
     @Composable
     private fun CardsImage(modifier: Modifier) {
         Image(
@@ -106,8 +111,9 @@ class GameRoomScreenView {
     }
 
     @Composable
-    private fun DrawCardButton(modifier: Modifier) {
+    private fun DrawCardButton(modifier: Modifier, buttonState: Boolean) {
         Button(
+            enabled = buttonState,
             modifier = modifier
                 .aspectRatio(1f),
             border = BorderStroke(1.dp, Color.Magenta),
@@ -144,10 +150,17 @@ class GameRoomScreenView {
     }
 
     companion object {
-        private val dummyPlayer = Player("id", "name1", mutableListOf(0,2), false, false)
-        private val dummyPlayerMe = Player("id", "name1", mutableListOf(0,2, 3, 4), true, false)
+        private val dummyPlayer = Player("id", "name1", mutableListOf(0, 2), false, false)
+        private val dummyPlayerMe = Player("id", "name1", mutableListOf(0, 2, 3, 4), true, false)
         private val dummyPlayers = listOf(dummyPlayer, dummyPlayer, dummyPlayerMe)
         private val dummyRoom =
-            Room(mutableListOf(1, 2, 3), "id4", "-NnBI5_cAHOVD4X8JTnQ", "roomName", dummyPlayers, true)
+            Room(
+                mutableListOf(1, 2, 3),
+                "id4",
+                "-NnBI5_cAHOVD4X8JTnQ",
+                "roomName",
+                dummyPlayers,
+                true
+            )
     }
 }
