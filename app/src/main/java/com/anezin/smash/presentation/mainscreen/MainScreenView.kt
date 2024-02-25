@@ -39,17 +39,24 @@ class MainScreenView {
                 Text(text = "Smash!", fontSize = 40.sp)
             }
             Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize(),
             ) {
-                if (myId.isNotBlank()) Button(onClick = {
+//                if (myId.isNotBlank())
+                Button(onClick = {
                     navController.navigate(Screen.SearchRoomScreen.route)
                 }) {
                     Text(text = "Join room")
                 }
+//                if (myId.isNotBlank())
+                Button(onClick = {
+                    viewModel.createNewRoomAndNavigate(navController)
+                }) {
+                    Text(text = "Create room")
+//                }
+                }
             }
         }
-
     }
 }

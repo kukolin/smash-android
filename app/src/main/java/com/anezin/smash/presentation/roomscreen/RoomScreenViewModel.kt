@@ -1,24 +1,20 @@
 package com.anezin.smash.presentation.roomscreen
 
-import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.anezin.smash.Screen
 import com.anezin.smash.core.domain.Room
+import com.anezin.smash.core.interfaces.LocalDataRepository
 import com.anezin.smash.infrastructure.repositories.FirebaseRoomRepository
 import kotlinx.coroutines.launch
 
 class RoomScreenViewModel(
-    private val roomRepository: FirebaseRoomRepository
+    private val roomRepository: FirebaseRoomRepository,
+    localDataRepository: LocalDataRepository
 ) : ViewModel() {
     val roomState = roomRepository.roomState
 
-    init {
-        roomRepository.subscribeToCardChange("-NnBI5_cAHOVD4X8JTnQ")
-    }
     fun onInitializeGameTaped(navController: NavController) {
         viewModelScope.launch {
             shuffleDeckAndAssign()

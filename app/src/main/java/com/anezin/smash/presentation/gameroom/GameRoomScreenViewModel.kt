@@ -40,8 +40,8 @@ class GameRoomScreenViewModel(
         checkIfSmashCompleted(timeList.toMutableList())
     }
     init {
-        firebaseRoomRepository.subscribeToCardChange("-NnBI5_cAHOVD4X8JTnQ")
-        firebaseRoomRepository.subscribeToSmashTimeChange("-NnBI5_cAHOVD4X8JTnQ")
+//        firebaseRoomRepository.subscribeToCardChange(localDataRepository.getRoomId())
+        firebaseRoomRepository.subscribeToSmashTimeChange(localDataRepository.getRoomId())
         firebaseRoomRepository.roomState.observeForever(_roomObserver)
         firebaseRoomRepository.smashTimeState.observeForever(_smashTimesObserver)
     }

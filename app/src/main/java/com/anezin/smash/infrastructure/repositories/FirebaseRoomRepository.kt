@@ -21,9 +21,10 @@ import kotlin.coroutines.resumeWithException
 class FirebaseRoomRepository(
     private val database: FirebaseDatabase = Firebase.database
 ) : RoomRepository {
-    val roomState = MutableLiveData(Room(mutableListOf(), "", "", "", listOf(), false))
+    val roomState = MutableLiveData(Room())
     val smashTimeState = MutableLiveData(mutableListOf<SmashTime>())
     override suspend fun getRoomData(roomId: String): Room {
+        if(roomId.isBlank()) return Room()
         return suspendCancellableCoroutine { continuation ->
             val myRef = database.getReference("rooms/$roomId/room")
             Log.d("pidiendo data", roomId)

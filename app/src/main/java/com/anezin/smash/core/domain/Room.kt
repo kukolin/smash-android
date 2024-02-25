@@ -7,7 +7,11 @@ data class Room(
     val name: String,
     val players: List<Player>,
     val started: Boolean,
-)
+) {
+    constructor() : this(
+        mutableListOf(), "", "", "", listOf(), false
+    )
+}
 
 data class Player(
     val id: String,

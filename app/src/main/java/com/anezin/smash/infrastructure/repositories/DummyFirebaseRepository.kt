@@ -33,6 +33,6 @@ class DummyFirebaseRepository : RoomRepository {
         private val dummyPlayer2 = Player("id2", "name2",  mutableListOf(), false, false)
         private val dummyPlayer3 = Player("id3", "name3",  mutableListOf(), false, false)
         private val dummyPlayers = listOf(dummyPlayer1, dummyPlayer2, dummyPlayer3)
-        private val dummyRoom = Room(mutableListOf(), "0", "-NnBI5_cAHOVD4X8JTnQ", "roomName", dummyPlayers, true)
+        private val dummyRoom = Room(mutableListOf(), "0", "-asd", "roomName", dummyPlayers, true)
     }
 }
