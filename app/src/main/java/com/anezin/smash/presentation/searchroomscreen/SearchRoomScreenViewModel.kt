@@ -1,15 +1,12 @@
 package com.anezin.smash.presentation.searchroomscreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.anezin.smash.Screen
 import com.anezin.smash.core.domain.Player
 import com.anezin.smash.core.domain.Room
-import com.anezin.smash.core.interfaces.RoomRepository
 import com.anezin.smash.infrastructure.actions.GetRoom
-import com.anezin.smash.infrastructure.actions.SaveRoom
 import com.anezin.smash.infrastructure.repositories.FirebaseRoomRepository
 import com.anezin.smash.infrastructure.repositories.InMemoryLocalDataRepository
 import kotlinx.coroutines.flow.MutableStateFlow

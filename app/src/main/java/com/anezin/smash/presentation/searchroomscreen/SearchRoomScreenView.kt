@@ -11,18 +11,15 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.anezin.smash.infrastructure.factories.Factory
-import kotlinx.coroutines.launch
 
 class SearchRoomScreenView {
 
@@ -45,7 +42,6 @@ class SearchRoomScreenView {
         ) {
             Text(text = "Ingrese el ID de la sala:")
             Spacer(modifier = Modifier.height(8.dp))
-            text = "-NnBI5_cAHOVD4X8JTnQ"
             TextField(value = text, onValueChange = { text = it })
             Spacer(modifier = Modifier.height(8.dp))
             if(feedbackMessage.isNotEmpty()) Text(text = feedbackMessage)

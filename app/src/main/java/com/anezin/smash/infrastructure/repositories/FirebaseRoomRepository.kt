@@ -30,7 +30,7 @@ class FirebaseRoomRepository(
             Log.d("pidiendo data", roomId)
             myRef.get().addOnSuccessListener { snapshot ->
                 Log.d("entro", "entro bien")
-                val roomResponse = snapshot.getValue<RoomResponse>() ?: throw Exception()
+                val roomResponse = snapshot.getValue<RoomResponse>() ?: RoomResponse()
                 roomState.value = roomResponse.toRoom()
                 continuation.resume(roomResponse.toRoom())
             }.addOnFailureListener { exception ->
